@@ -21,10 +21,13 @@ $(document).ready(function() {
 	});
 
 	$('#sendbutton').on('click', function() {
-		socket.send($('#myMessage').val());
-		console.log('SDASDAS');
+		//socket.send({name: $('#name').val(), msg: $('#myMessage').val()});
+		socket.send($('#name').val(), $('#myMessage').val());
+
 		$('#myMessage').val('');
 	});
+
+	
     // var input = document.getElementById("userInput").value;
 
 	// $('#sendbutton').on('click', function() {
@@ -42,8 +45,10 @@ $(document).ready(function() {
 });
 </script>
 <ul id="messages"></ul>
+<input type="name" id="name">
 <input type="text" id="myMessage">
 <button id="sendbutton">Send</button>
+
 </body>
 </html>
 

@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, send
 import json
 import requests
 import geocoder
-
+from time import gmtime, strftime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecret'
@@ -14,16 +14,28 @@ def home():
     return render_template("index.html")
 	
 @socketio.on('message')
-def handleMessage(msg):
-	print("message")
+def handleMessage(name, msg):
 	g = geocoder.ip('me')
-	print(g.latlng)
-	send(g.latlng, broadcast=True)
-	send(msg, broadcast=True)
 
+	timeStamp = str(strftime("%H:%M:%S", gmtime()))
+	info = {
+		"msg": msg, 
+		"name": name, 
+		"time": timeStamp, 
+		"lat": g.lat, 
+		"lng": g.lng
+		}
+
+	send(msg, broadcast=True)
+	send(name, broadcast=True)
+	send(timeStamp, broadcast=True)
+	print(str(info))
+
+
+@socketio.on('2')
+def handleMessage2(msg):
+	print("HI")
 
 if __name__ == '__main__':
 	socketio.run(app, debug=True)
 
-#json with name, message, time.
-# metadata: coordinates, 
