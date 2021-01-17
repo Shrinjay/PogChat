@@ -53,5 +53,16 @@ class Messages(db.Model):
             "timeSent": self.timestamp
         }
 
+class Session(db.Model):
+    __tablename__='session'
+    id = db.Column(db.Integer, primary_key=true)
+    session_token = db.Column('session_token', db.String)
+    location = db.Column('location', Geometry('POINT'))
+
+    def __init__(self, id, session_token, location):
+        self.id = id
+        self.session_token = session_token
+        self.location = location
+
 # INSERT INTO messages VALUES (1, 1, 'test', TIMESTAMP '2016-01-25 10:10:10.555');
 #  CREATE TABLE messages (id UUID NOT NULL DEFAULT gen_random_uuid(), parent_id INTEGER REFERENCES users (user_id) ON DELETE CASCADE, content STRING, timestamp TIMESTAMP);

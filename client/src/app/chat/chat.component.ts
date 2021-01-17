@@ -2,6 +2,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import {MessageServiceService} from '../message-service.service'
+import { interval, Subscription } from 'rxjs';
 //import { ChatMessageDto } from '../models/chatMessageDto';
 
 
@@ -31,6 +32,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   scrollingElement = document.getElementById('chat-container');
   user_id : any;
   lastName : any;
+  subscription : Subscription;
+  ip: string;
 
 async sendMessage(sendForm: NgForm){
 
@@ -42,7 +45,7 @@ async sendMessage(sendForm: NgForm){
   this.lastName = sendForm.value.user
 
   this.messageService.sendMessage({
-    ip:"33.248.92.47",
+    ip:this.ip,
     id:this.user_id,
     name: sendForm.value.user
   }, sendForm.value.message, sendForm.value.time).subscribe(e => this.contents.push(e))
@@ -56,7 +59,7 @@ async sendMessage(sendForm: NgForm){
 register(sendForm) : Promise<any> {
   return new Promise((resolve, reject)=> {
     this.messageService.registerUser({
-      ip: "33.248.92.47",
+      ip: this.ip,
       name: sendForm.value.user
     }).subscribe(e => {
        resolve(e);
@@ -69,10 +72,20 @@ register(sendForm) : Promise<any> {
 
   constructor(private messageService: MessageServiceService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
+    fetch('http://ip-api.com/json').then(
+      e => e.json()
+      .then(f => {
+        this.ip = f?.query
+        interval(5000).subscribe(v => this.getMessages())
+      })) 
+  }
 
-    this.messageService.getMessages({ip: '33.248.92.47'}).subscribe(e => e.forEach(c => this.contents.push(...c.messages)))
-    console.log(this.contents)
+  getMessages() {
+    this.messageService.getMessages({ip: this.ip}).subscribe(e => {
+      this.contents=[]
+      e.forEach(c => this.contents.push(...c.messages))
+    })
   }
 
   ngAfterViewChecked() {
