@@ -38,11 +38,12 @@ def new_message():
     g = geocoder.ip(request.args.get('ip'))
     userLocation = Point(float(g.lat), float(g.lng))
     user_id = request.args.get('id')
+    newMessage = Messages(user_id, request.get_json()['message'], request.get_json()['timestamp'], request.args.get('name'))
     def update_messages(session):
-        session.add(Messages(user_id, request.get_json()['message'], request.get_json()['timestamp']))
+        session.add(newMessage)
+    returnMessage = newMessage.to_json()
     run_transaction(sessionmaker, update_messages)
-    return run_transaction(sessionmaker, lambda s: jsonify([z.to_json() for z in s.query(User).filter(
-        functions.ST_DWithin(User.location, from_shape(userLocation, srid=4326), 1)).all()]))
+    return jsonify(returnMessage)
 
 @app.route('/register')
 def new_user():

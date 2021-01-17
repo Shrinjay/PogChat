@@ -26,7 +26,6 @@ class User(db.Model):
         self.name = name
         self.location = location
     def to_json(self):
-        print([s.to_json() for s in self.messages])
         return {
             "id":self.id,
             "name": self.name,
@@ -36,18 +35,20 @@ class User(db.Model):
 class Messages(db.Model):
     __tablename__='messages'
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column('name', db.String)
     parent_id = db.Column(db.Integer, ForeignKey('users.user_id'))
     content = db.Column('content', db.String)
     timestamp = db.Column('timestamp', db.DateTime)
 
-    def __init__(self, parent_id, content, timestamp):
+    def __init__(self, parent_id, content, timestamp, name):
         self.parent_id = parent_id
         self.content = content
         self.timestamp = timestamp
+        self.name = name
 
     def to_json(self):
         return {
-            "user": run_transaction(sessionmaker, lambda s: s.query(User).filter_by(id=self.parent_id).first().name),
+            "user": self.name,
             "message": self.content,
             "timeSent": self.timestamp
         }

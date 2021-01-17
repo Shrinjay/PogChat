@@ -43,12 +43,9 @@ async sendMessage(sendForm: NgForm){
 
   this.messageService.sendMessage({
     ip:"33.248.92.47",
-    id:this.user_id
-  }, sendForm.value.message, sendForm.value.time).subscribe(e => {
-    this.contents=[]
-    e.forEach(c => this.contents.push(...c.messages))
-
-  })
+    id:this.user_id,
+    name: sendForm.value.user
+  }, sendForm.value.message, sendForm.value.time).subscribe(e => this.contents.push(e))
 
   console.log(this.contents)
   
