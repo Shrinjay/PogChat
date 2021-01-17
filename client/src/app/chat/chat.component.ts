@@ -35,6 +35,10 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   subscription : Subscription;
   ip: string;
   location: string;
+  geo: object = {
+    lat: null,
+    lng: null
+  }
 
 async sendMessage(sendForm: NgForm){
 
@@ -48,7 +52,9 @@ async sendMessage(sendForm: NgForm){
   this.messageService.sendMessage({
     ip:this.ip,
     id:this.user_id,
-    name: sendForm.value.user
+    name: sendForm.value.user,
+    lat: this.geo.lat,
+    lng: this.geo.lng
   }, sendForm.value.message, sendForm.value.time).subscribe(e => this.contents.push(e))
 
   console.log(this.contents)
@@ -61,7 +67,9 @@ register(sendForm) : Promise<any> {
   return new Promise((resolve, reject)=> {
     this.messageService.registerUser({
       ip: this.ip,
-      name: sendForm.value.user
+      name: sendForm.value.user,
+      lat: this.geo.lat,
+      lng: this.geo.lng
     }).subscribe(e => {
        resolve(e);
     })
@@ -79,12 +87,14 @@ register(sendForm) : Promise<any> {
       .then(f => {
         this.ip = f?.query
         this.location = f?.city
+        this.geo.lat = f?.lat
+        this.geo.lng = f?.lon
         interval(5000).subscribe(v => this.getMessages())
       })) 
   }
 
   getMessages() {
-    this.messageService.getMessages({ip: this.ip}).subscribe(e => {
+    this.messageService.getMessages({ip: this.ip, lat: this.geo.lat, lng: this.geo.lng}).subscribe(e => {
       this.contents=[]
       e.forEach(c => this.contents.push(...c.messages))
     })

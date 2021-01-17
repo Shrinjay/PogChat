@@ -13,11 +13,14 @@ export class VideoComponent implements OnInit {
   ngOnInit(): void {
     //init opentok obj, publisher, append to publisher element in html
 
-fetch('http://localhost:5000/getSession?ip=129.97.125.3')
+    fetch('http://ip-api.com/json')
+    .then(ip => ip.json()
+    .then(geo => {
+      fetch(`http://localhost:5000/getSession?lat=${geo.lat}&lng=${geo.lon}`)
 .then(res => res.json()
 .then(sessionData => {
-  var apiKey="47084464"
   console.log(sessionData)
+  var apiKey="47084464"
   const session = OT.initSession(apiKey, sessionData.session_id);
   const publisher = OT.initPublisher('publisher');
   
@@ -40,9 +43,7 @@ fetch('http://localhost:5000/getSession?ip=129.97.125.3')
       document.getElementById('subscribers').appendChild(subContainer); //creates div, appends
   
       //subscribes to new stream, sticks it into container
-      session.subscribe(event.stream, subContainer, function(error) {
-          if(error) { console.error('Couldn\'t subscribe to stream, Sadge', error); }
-      });
+      session.subscribe(event.stream, subContainer);
     }
   });
   
@@ -51,6 +52,7 @@ fetch('http://localhost:5000/getSession?ip=129.97.125.3')
     if(error) { console.error('Couldn\'t connect to the session, ResidentSleeper', error); }
   });
 }))
+    }))
 
   }
 
