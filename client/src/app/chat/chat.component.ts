@@ -34,6 +34,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   lastName : any;
   subscription : Subscription;
   ip: string;
+  location: string;
 
 async sendMessage(sendForm: NgForm){
 
@@ -77,6 +78,7 @@ register(sendForm) : Promise<any> {
       e => e.json()
       .then(f => {
         this.ip = f?.query
+        this.location = f?.city
         interval(5000).subscribe(v => this.getMessages())
       })) 
   }

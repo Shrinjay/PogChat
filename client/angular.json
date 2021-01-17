@@ -28,7 +28,8 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.slim.min.js"
+              "node_modules/jquery/dist/jquery.slim.min.js",
+              "https://static.opentok.com/v2/js/opentok.js"
             ]
           },
           "configurations": {

@@ -1,9 +1,11 @@
 <main class="chat">
     <div class="container">
-
         <div #scroller class="chat-content" id="chat-container">
             <div class="card">
                 <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Say Hi to others from {{location}}</strong>
+                    </li>
                     <li class="list-group-item" *ngFor="let content of contents">
                         <span>{{ content.time }}  </span>
                         <strong>{{content.user}}: </strong>
