@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+    <title>Test</title>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script> <!-- necessary to create OT obj -->
+    <script type="text/javascript">
+        var apiKey = '{{  API_KEY }}';
+        var sessionId = '{{ session_id }}'
+        var token = '{{ token }}'
+    </script>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+
+<body>
+    <h2>Insanely Pog</h2>
+    <div id="publisher"></div>
+    <div id="subscribers"></div>
+</body>
+
+</html>
