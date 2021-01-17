@@ -15,14 +15,14 @@ sessionmaker = sqlalchemy.orm.sessionmaker(db.engine)
 
 
 class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column('user_id', db.Integer, primary_key=True)
+    __tablename__ = 'shrinjay_users'
+    id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column('name', db.String)
     location = db.Column('location', Geometry('POINT'))
     messages = relationship("Messages")
 
-    def __init__(self, id, location, name):
-        self.id = id
+    def __init__(self, user_id, location, name):
+        self.id = user_id
         self.name = name
         self.location = location
     def to_json(self):
@@ -33,10 +33,10 @@ class User(db.Model):
         }
 
 class Messages(db.Model):
-    __tablename__='messages'
+    __tablename__='shrinjay_messages'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column('name', db.String)
-    parent_id = db.Column(db.Integer, ForeignKey('users.user_id'))
+    parent_id = db.Column(db.Integer, ForeignKey('shrinjay_users.id'))
     content = db.Column('content', db.String)
     timestamp = db.Column('timestamp', db.DateTime)
 
@@ -52,9 +52,10 @@ class Messages(db.Model):
             "message": self.content,
             "timeSent": self.timestamp
         }
+# CREATE TABLE shrinjay_messages(id UUID NOT NULL DEFAULT gen_random_uuid(), parent_id INTEGER REFERENCES shrinjay_users(id), content STRING, timestamp TIMESTAMP, name STRING);
 
 class Session(db.Model):
-    __tablename__='session'
+    __tablename__='shrinjay_session'
     id = db.Column(db.Integer, primary_key=true)
     session_token = db.Column('session_token', db.String)
     location = db.Column('location', Geometry('POINT'))

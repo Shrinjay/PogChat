@@ -1,3 +1,5 @@
 app.cfg
 /venv
 node_modules
+trusty-lemur-ca.crt
+

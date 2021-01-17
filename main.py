@@ -32,17 +32,13 @@ opentok = OpenTok(API_KEY, API_SECRET)
 
 @app.route('/')
 def show_all():
-    g = geocoder.ip(request.args.get('ip'))
-    print(g.latlng)
-    userLocation = Point(float(g.lat), float(g.lng))
+    userLocation = Point(float(request.args.get('lat')), float(request.args.get('lng')))
     return run_transaction(sessionmaker, lambda s: jsonify([z.to_json() for z in s.query(User).filter(functions.ST_DWithin(User.location, from_shape(userLocation, srid=4326), 0.001)).all()]))
 
 @app.route('/newMessage', methods=['POST', 'GET'])
 def new_message():
-    g = geocoder.ip(request.args.get('ip'))
-    userLocation = Point(float(g.lat), float(g.lng))
     user_id = request.args.get('id')
-    newMessage = Messages(user_id, request.get_json()['message'], request.get_json()['timestamp'], request.args.get('name'))
+    newMessage = Messages(4, request.get_json()['message'], request.get_json()['timestamp'], request.args.get('name'))
     def update_messages(session):
         session.add(newMessage)
     returnMessage = newMessage.to_json()
@@ -52,15 +48,14 @@ def new_message():
 @app.route('/register')
 def new_user():
     count = run_transaction(sessionmaker, lambda s: s.query(User).count()) + 1
-    g = geocoder.ip(request.args.get('ip'))
-    userLocation = Point(float(g.lat), float(g.lng))
-    run_transaction(sessionmaker, lambda s:s.add(User(count, functions.ST_SetSRID(functions.ST_MakePoint(g.lat, g.lng), 4326), request.args.get('name'))))
+    print(count)
+    userLocation = Point(float(request.args.get('lat')), float(request.args.get('lng')))
+    run_transaction(sessionmaker, lambda s:s.add(User(count, functions.ST_SetSRID(functions.ST_MakePoint(request.args.get('lat'), request.args.get('lng')), 4326), request.args.get('name'))))
     return jsonify(count)
 
 @app.route('/getSession')
 def new_token():
-    g = geocoder.ip(request.args.get('ip'))
-    userLocation = Point(float(g.lat), float(g.lng))
+    userLocation = Point(float(request.args.get('lat')), float(request.args.get('lng')))
     def query(session):
         res = session.query(Session).filter(functions.ST_DWithin(Session.location, from_shape(userLocation, srid=4326), 1)).first()
         if (res):
@@ -70,12 +65,18 @@ def new_token():
 
     session_id = run_transaction(sessionmaker, query)
     if (session_id):
-        return opentok.generate_token(session_id)
+        return jsonify({
+            "session_id": session_id,
+            "token": opentok.generate_token(session_id)
+        })
     else:
         session = opentok.create_session()
         count = run_transaction(sessionmaker, lambda s: s.query(Session).count()) + 1
-        run_transaction(sessionmaker, lambda s: s.add(Session(count, session.session_id, functions.ST_SetSRID(functions.ST_MakePoint(g.lat, g.lng), 4326))))
-        return opentok.generate_token(session.session_id)
+        run_transaction(sessionmaker, lambda s: s.add(Session(count, session.session_id, functions.ST_SetSRID(functions.ST_MakePoint(request.args.get('lat'), request.args.get('lng')), 4326))))
+        return jsonify({
+            "session_id": session.session_id,
+            "token": opentok.generate_token(session.session_id)
+        })
 
 
 app.run()

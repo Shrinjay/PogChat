@@ -28,9 +28,8 @@ export class VideoComponent implements OnInit {
   session.on({
     //function runs when session.connect() asynchronously completes
     sessionConnected: function(event) {
-  
       //publishes & triggers streamCreated clientside
-      session.publish(publisher, function(error) {
+      session.publish(publisher, function(error) {  
         if(error) { console.error('Couldn\'t publish the feed, feelsbadman', error); }
       });
     },
@@ -43,7 +42,9 @@ export class VideoComponent implements OnInit {
       document.getElementById('subscribers').appendChild(subContainer); //creates div, appends
   
       //subscribes to new stream, sticks it into container
-      session.subscribe(event.stream, subContainer);
+      session.subscribe(event.stream, subContainer, function(error) {
+          if(error) { console.error('Couldn\'t subscribe to stream, Sadge', error); }
+      });
     }
   });
   
