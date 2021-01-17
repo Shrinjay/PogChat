@@ -1,0 +1,33 @@
+<main class="chat">
+    <div class="container">
+
+        <div #scroller class="chat-content" id="chat-container">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" *ngFor="let content of contents">
+                        <span>{{ content.time }}  </span>
+                        <strong>{{content.user}}: </strong>
+                        <span>{{content.message}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <form (ngSubmit)="sendMessage(sendForm)" #sendForm="ngForm">
+            <div class="chat-send row">
+                <div class="col-2">
+                    <input type="text" class="form-control" name="user" id="input-user" placeholder="Username" ngModel>
+                </div>
+                <div class="col-6">
+                    <input type="text" class="form-control" name="message" id="input-message" placeholder="Type Message" autocomplete="off" ngModel>
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</main>

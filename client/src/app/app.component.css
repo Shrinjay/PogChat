@@ -1,0 +1,10 @@
+.background{
+    background-color: #2F4F4F;
+    color: #2F4F4F;
+    min-width: 100%;
+    max-height: 100%;
+}
+
+.backdrop{
+    background-color: #2F4F4F; 
+}

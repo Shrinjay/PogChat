@@ -1,0 +1,29 @@
+.chat {
+    margin-top: 5rem;
+    
+}
+
+div.chat-content {
+    border-radius: .25rem;
+    height: 40rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.card {
+    height: 100%;
+    background-color: #DCDCDC;
+}
+
+.btn{
+background-color: #343a40;
+border-color: #343a40;
+}
+
+.time{
+    display:none;
+}

@@ -1,0 +1,13 @@
+.navbar-name{
+color: white;
+}
+
+#logo{
+    display: inline-block;
+    background: url('../../assets/img/logo.png') no-repeat;
+    background-size: cover;
+    margin: 12px 10px 12px 32px;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+}
