@@ -15,8 +15,8 @@ import geocoder
 from flask_cors import CORS, cross_origin
 from opentok import OpenTok
 
-API_KEY =  "47084464"
-API_SECRET = "487b2c632bd7d167f896a425b44603adfe0b4494"
+API_KEY = ""
+API_SECRET = ""
 # Define endpoint routes and begin implementing:
 # For now lets define a get route to get all messages for a certain location
 # And a post route to add messages to the DB.
